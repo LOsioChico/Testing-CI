@@ -1,4 +1,4 @@
-name: Test Build, Lint and Setup
+name: Build, Lint and Setup
 
 on:
   push:
@@ -6,13 +6,12 @@ on:
 
 jobs:
   build-lint-setup:
+    name: Build, Lint and Setup
     runs-on: ubuntu-latest
-    # Node.js version is defined as 18.x as a matrix strategy
     strategy:
       matrix:
         node-version: [18.x]
-
-    # Steps to run the job
+        pnpm-version: [8.6.0]
     steps:
       # Clones the repository
       - uses: actions/checkout@v3
@@ -20,7 +19,7 @@ jobs:
       # Sets up pnpm
       - uses: pnpm/action-setup@v2
         with:
-          version: '8.6.0'
+          version: ${{matrix.pnpm-version}}
 
       # Sets up Node.js and caches with pnpm
       - name: Use Node.js ${{matrix.node-version}}
@@ -31,7 +30,7 @@ jobs:
 
       # Installs dependencies using pnpm
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       # Builds the project using pnpm
       - name: Build
